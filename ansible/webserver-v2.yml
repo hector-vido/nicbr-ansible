@@ -1,0 +1,30 @@
+# Remover o arquivo site/index.html para utilizar o template
+- hosts: webservers
+  become: yes
+  tasks:
+  - name: Garante que o Apache esteja presente
+    package:
+      name: httpd
+      state: present
+  - block:
+    - name: Garante que o serviço do Apache esteja iniciado no Fedora
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+    - name: Garante que o site esteja presente em Fedora
+      copy:
+        src: site/
+        dest: /var/www/html/
+    when: ansible_os_family == 'RedHat'
+  - block:
+    - name: Garante que o serviço do Apache esteja iniciado no openSUSE
+      service:
+        name: apache2
+        state: started
+        enabled: yes
+    - name: Garante que o site esteja presente em openSUSE
+      copy:
+        src: site/
+        dest: /srv/www/htdocs/
+    when: ansible_os_family == 'Suse'

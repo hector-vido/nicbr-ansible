@@ -1,0 +1,65 @@
+- hosts: balancers
+  become: yes
+  tasks:
+  - name: Atualiza os pacotes do Debian
+    apt:
+      update_cache: yes
+    when: ansible_os_family == 'Debian'
+  - name: Permite o tráfego na porta 80 e 443
+    ansible.posix.firewalld:
+      service: '{{ item }}'
+      permanent: yes
+      state: enabled
+    loop:
+    - http
+    - https
+    when: ansible_os_family == 'RedHat'
+  - ansible.posix.firewalld:
+      rich_rule: rule protocol value="vrrp" accept
+      permanent: yes
+      state: enabled
+    when: ansible_os_family == 'RedHat'
+  - name: Garante que o HAProxy esteja presente
+    package:
+      name: haproxy, keepalived
+      state: present
+  - name: Garante que o módulo python3-libsemanage esteja instalado
+    package:
+      name: python3-libsemanage
+      state: present
+    when: ansible_os_family == 'RedHat'
+  - name: Garante que o SELinux permita o HAProxy a usar as portas
+    ansible.posix.seboolean:
+      name: haproxy_connect_any
+      state: yes
+      persistent: yes
+    when: ansible_os_family == 'RedHat'
+  - name: Garante que o arquivo de configuração esteja presente
+    copy:
+      src: files/haproxy.cfg
+      dest: /etc/haproxy/haproxy.cfg
+    register: haproxy
+  - name: Garante que o serviço do HAProxy esteja iniciado
+    service:
+      name: haproxy
+      state: started
+      enabled: yes
+  - name: Garante que o serviço do HAProxy receba as modificações
+    service:
+      name: haproxy
+      state: reloaded
+    when: haproxy.changed == true
+  - name: Garante que o serviço do keepalived esteja iniciado
+    service:
+      name: keepalived
+      state: started
+  - name: Garante que o arquivo do keepalived esteja presente
+    template:
+      src: files/keepalived.conf
+      dest: /etc/keepalived/keepalived.conf
+    register: keepalived
+  - name: Garante que o serviço do keepalived receba as modificações
+    service:
+      name: keepalived
+      state: reloaded
+    when: keepalived.changed == true

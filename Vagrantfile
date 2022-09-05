@@ -1,0 +1,45 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Fedora 36 com problemas para configurar IP fixo
+
+vms = {
+# 'ansible'  => {'memory' => '512', 'cpus' => 1, 'ip' => '10',  'box' => 'debian/bullseye64'},
+  'alma'     => {'memory' => '1024', 'cpus' => 1, 'ip' => '101', 'box' => 'almalinux/9'},
+  'debian'   => {'memory' => '1024', 'cpus' => 1, 'ip' => '102', 'box' => 'debian/bullseye64'},
+  'fedora'   => {'memory' => '1024', 'cpus' => 1, 'ip' => '201', 'box' => 'fedora/35-cloud-base'},
+  'opensuse' => {'memory' => '1024', 'cpus' => 1, 'ip' => '202', 'box' => 'opensuse/Leap-15.4.x86_64'}
+}
+
+Vagrant.configure('2') do |config|
+
+  config.vm.box_check_update = false
+
+  vms.each do |name, conf|
+    config.vm.define "#{name}" do |k|
+      k.vm.hostname = "#{name}.ansible.local"
+      k.vm.network 'private_network', ip: "192.168.56.#{conf['ip']}"
+      k.vm.box = conf['box']
+
+      k.vm.provider 'virtualbox' do |vb|
+        vb.memory = conf['memory']
+        vb.cpus = conf['cpus']
+      end
+
+      k.vm.provider 'libvirt' do |lv|
+        lv.cpus = conf['cpus']
+        lv.memory = conf['memory']
+        lv.cputopology :sockets => 1, :cores => conf['cpus'], :threads => 1
+      end
+
+      k.vm.provision 'shell', inline: <<-SHELL
+        mkdir -p /root/.ssh
+        cp /vagrant/files/keys/id_ed25519 /root/.ssh
+        chmod 400 /root/.ssh/id_ed25519*
+        cp /vagrant/files/keys/id_ed25519.pub /root/.ssh/authorized_keys
+      SHELL
+
+    end
+
+  end
+end
