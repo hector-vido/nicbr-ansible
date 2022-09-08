@@ -14,9 +14,11 @@ Escolha uma das opções abaixo para obter melhores instruções sobre como prep
 - [ansible.ova](https://github.com/hector-vido/nicbr-ansible/tree/master/instrucoes/ova.md)
 
 **Atenção:**
+- Será preciso habilitar a capacidade de virtualização do seu processador na "BIOS" do seu computador.
 - O Vagrant tem maior compatibilidade com o `VirtualBox` e o `Libvirt`, nem todas as imagens estão disponíveis para todos os hypervisors.
 - O funcionamento do `HyperV` com o Vagrant é parcial, as máquinas não conseguem ser configuradas com endereço IP fixo.
-- O `HyperV` ou mesmo versões não originais do `VMWare Workstation` podem causar problemas nada óbvios no `VirtualBox`.
+- O `HyperV` ou mesmo versões não originais do `VMWare Workstation` podem causar problemas nada óbvios no `VirtualBox`, não use software pirata, use Linux.
+- Algums versões do Windows possuem componentes do `HyperV` instalados que podem causar problemas no `VirtualBox`.
 - Até o momento não há hypervisors livres de arquitetura `amd64`(`x86_64`) para sistemas operacionais da Apple `arm64`, se possui uma máquina destas, venda, compre um computador de verdade e ajude alguém com o dinheiro que sobrar.
 
 # Ansible
