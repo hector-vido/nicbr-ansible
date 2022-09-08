@@ -1,0 +1,4 @@
+- name: Importa a playbook de webservers
+  import_playbook: webserver-v2.yml
+- name: Importa a playbook de balancers 
+  import_playbook: balancer-v2.yml

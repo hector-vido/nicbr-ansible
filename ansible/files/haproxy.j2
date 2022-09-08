@@ -26,13 +26,15 @@ listen webservers-http
   bind *:80
   mode tcp # http
   balance roundrobin # leastconn, source
-  server webserver1 192.168.56.201:80 check inter 1s
-  server webserver2 192.168.56.202:80 check inter 1s
+  {% for host in groups['webservers'] %}
+  server webserver{{ loop.index }} {{ hostvars[host].inventory_hostname }}:80 check inter 1s
+  {% endfor %}
 
 # https 443
 listen webservers-https
   bind *:443
   mode tcp
   balance roundrobin # leastconn, sourc
-  server webserver1 192.168.56.201:443 check inter 1s
-  server webserver2 192.168.56.202:443 check inter 1s
+  {% for host in groups['webservers'] %}
+  server webserver{{ loop.index }} {{ hostvars[host].inventory_hostname }}:443 check inter 1s
+  {% endfor %}

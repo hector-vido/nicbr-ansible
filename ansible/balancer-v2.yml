@@ -1,39 +1,19 @@
 - hosts: balancers
   become: yes
   tasks:
-  - name: Atualiza os pacotes do Debian
-    apt:
-      update_cache: yes
+  # ------------ Debian --------------
+  - name: Executa as ações em Debian
+    include_tasks: balancer-debian.yml
     when: ansible_os_family == 'Debian'
-  - name: Permite o tráfego na porta 80 e 443
-    ansible.posix.firewalld:
-      service: '{{ item }}'
-      permanent: yes
-      state: enabled
-    loop:
-    - http
-    - https
+  # ------------ Red Hat -------------
+  - name: Executa as ações em Red Hat
+    include_tasks: balancer-redhat.yml
     when: ansible_os_family == 'RedHat'
-  - ansible.posix.firewalld:
-      rich_rule: rule protocol value="vrrp" accept
-      permanent: yes
-      state: enabled
-    when: ansible_os_family == 'RedHat'
+  # ------------- Geral --------------
   - name: Garante que o HAProxy esteja presente
     package:
       name: haproxy, keepalived
       state: present
-  - name: Garante que o módulo python3-libsemanage esteja instalado
-    package:
-      name: python3-libsemanage
-      state: present
-    when: ansible_os_family == 'RedHat'
-  - name: Garante que o SELinux permita o HAProxy a usar as portas
-    ansible.posix.seboolean:
-      name: haproxy_connect_any
-      state: yes
-      persistent: yes
-    when: ansible_os_family == 'RedHat'
   - name: Garante que o arquivo de configuração esteja presente
     copy:
       src: files/haproxy.cfg
