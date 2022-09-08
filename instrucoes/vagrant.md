@@ -51,6 +51,8 @@ Ao baixar e descompactar o arquivo .zip um diretório chamado `nicbr-ansible-mas
 cd nicbr-ansible-master
 ```
 
+#### Comandos
+
 Todos os comandos do Vagrant devem ser executados no mesmo diretório do arquivo `Vagrantfile`, alguns exemplos:
 
 ```bash
@@ -62,4 +64,25 @@ vagrant destroy # desliga e destroy todas as máquinas
 vagrant ssh debian # acessa a máquina debian via SSH
 ```
 
-Você deve executar `vagrant up` para criar todas as máquinas. Na primeira vez que rodar esse comando as imagens de cada sistema serão baixadas e isso pode levar algum tempo, nas próximas vezes o processo será muito mais rápido pois as imagens estarão presentes na sua máquina.
+Você deve executar `vagrant up` para criar todas as máquinas. Na primeira vez que executar esse comando, todas as imagens serão baixadas e isso pode levar algum tempo, nas próximas vezes o processo será mais rápido.
+
+Apesar de existirem muitos comandos interessante do Vagrant, neste nosso caso apenas três comandos serão importantes.
+
+Este primeiro comando inicia o processo de criação e provisionamento das máquinas indicando explicitamente o uso do VirtualBox:
+
+```bash
+vagrant up --provider virtualbox
+```
+
+Este segundo comando interage com o shell das máquinas:
+
+```bash
+vagrant ssh fedora # acessa o shell
+vagrant ssh fedora -c 'dnf install -y vim' # executa um comando direto
+```
+
+Este terceiro comando desliga as máquinas:
+
+```bash
+vagrant halt
+```
