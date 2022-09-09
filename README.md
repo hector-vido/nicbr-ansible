@@ -24,6 +24,8 @@ Escolha uma das opções abaixo para obter melhores instruções sobre como prep
 
 # Ansible
 
+![Ansible](images/ansible.png)
+
 Ansible é um projeto livre e de código aberto voltado para o provisionamento, gerência de configuração e implantação de software através de [Infraestrutura como Código](https://pt.wikipedia.org/wiki/Infraestrutura_como_C%C3%B3digo). Foi desenvolvido originalmente por Michael DeHaan e adquirido pela Red Hat em 2015.
 
 De forma sucinta, as operações do Ansible acontecem através de uma máquina central, normalmente a mesma que está usando para ler este texto, se comunicando com outros dispositivos, APIs ou qualquer outro protocolo disponível.
