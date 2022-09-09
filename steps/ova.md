@@ -52,9 +52,16 @@ Muitas vezes a interface de rede já existe por padrão dentro do VirtualBox, se
 
 O endereço IPv4 deve ser `192.168.56.1` e a máscara de rede `255.255.255.0`, os demais valores não importam.
 
+**Memorize** o nome desta rede para utilizar na etapa a seguir, o nome da rede muda conforme o sistema operacional:
+
+- **Linux:** vboxnetX
+- **Widnows:** VirtualBox Host-Only Ethernet Adapter #X
+
 ![Configurar adaptador](../images/virtualbox-09.png)
 
-10. Verifique se todas as máquinas possúem seu adaptador número 2 configurado como "host-only" na interface criada anteriormente.
+10. Verificar o adaptador número 2 das máquinas:
+
+Verifique se todas as máquinas possúem seu adaptador número 2 configurado como "host-only" utlizando o nome da rede criada anteriormente. **Atenção** pois o nome desta interface na imagem chama-se **vboxnet0** mas pode ser completamente diferente em sua máquina.
 
 ![Verificar adaptador nas máquinas](../images/virtualbox-10.png)
 
