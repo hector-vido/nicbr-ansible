@@ -1,0 +1,40 @@
+# /etc/haproxy/haproxy.cfg
+
+defaults
+  timeout http-request    10s
+  timeout queue           1m
+  timeout connect         10s
+  timeout client          1m
+  timeout server          1m
+  timeout http-keep-alive 10s
+  timeout check           1s
+
+frontend stats
+  bind *:1936
+  mode http
+  maxconn 10
+  stats enable
+  stats hide-version
+  stats refresh 1s
+  stats show-node
+  stats show-desc Stats for webservers
+  stats auth admin:admin
+  stats uri /stats
+
+# http 80
+listen webservers-http
+  bind *:80
+  mode tcp # http
+  balance roundrobin # leastconn, source
+  {% for host in groups['webservers'] %}
+  server webserver{{ loop.index }} {{ hostvars[host].inventory_hostname }}:80 check inter 1s
+  {% endfor %}
+
+# https 443
+listen webservers-https
+  bind *:443
+  mode tcp
+  balance roundrobin # leastconn, sourc
+  {% for host in groups['webservers'] %}
+  server webserver{{ loop.index }} {{ hostvars[host].inventory_hostname }}:443 check inter 1s
+  {% endfor %}

@@ -1,10 +1,8 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# Fedora 36 com problemas para configurar IP fixo
-
 vms = {
-# 'ansible'  => {'memory' => '512', 'cpus' => 1, 'ip' => '10',  'box' => 'debian/bullseye64'},
+# 'ansible'  => {'memory' => '1024', 'cpus' => 1, 'ip' => '10',  'box' => 'ubuntu/kinetic64'},
   'alma'     => {'memory' => '1024', 'cpus' => 1, 'ip' => '101', 'box' => 'almalinux/9'},
   'debian'   => {'memory' => '1024', 'cpus' => 1, 'ip' => '102', 'box' => 'debian/bullseye64'},
   'fedora'   => {'memory' => '1024', 'cpus' => 1, 'ip' => '201', 'box' => 'fedora/35-cloud-base'},
@@ -16,6 +14,7 @@ Vagrant.configure('2') do |config|
   config.vm.box_check_update = false
 
   vms.each do |name, conf|
+
     config.vm.define "#{name}" do |k|
       k.vm.hostname = "#{name}.ansible.local"
       k.vm.network 'private_network', ip: "192.168.56.#{conf['ip']}"
@@ -34,9 +33,9 @@ Vagrant.configure('2') do |config|
 
       k.vm.provision 'shell', inline: <<-SHELL
         mkdir -p /root/.ssh
-        cp /vagrant/files/keys/id_ed25519 /root/.ssh
+        cp /vagrant/provision/id_ed25519 /root/.ssh
         chmod 400 /root/.ssh/id_ed25519*
-        cp /vagrant/files/keys/id_ed25519.pub /root/.ssh/authorized_keys
+        cp /vagrant/provision/id_ed25519.pub /root/.ssh/authorized_keys
       SHELL
 
     end

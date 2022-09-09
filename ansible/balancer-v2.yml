@@ -29,18 +29,37 @@
       name: haproxy
       state: reloaded
     when: haproxy.changed == true
-  - name: Garante que o serviço do keepalived esteja iniciado
-    service:
-      name: keepalived
-      state: started
-      enabled: yes
   - name: Garante que o arquivo do keepalived esteja presente
     template:
       src: files/keepalived.conf
       dest: /etc/keepalived/keepalived.conf
     register: keepalived
+  - name: Garante que o serviço do keepalived esteja iniciado
+    service:
+      name: keepalived
+      state: started
+      enabled: yes
   - name: Garante que o serviço do keepalived receba as modificações
     service:
       name: keepalived
       state: reloaded
     when: keepalived.changed == true
+  - name: Garante que o kernel esteja ajustado para o HAProxy
+    lineinfile:
+      path: /etc/sysctl.conf
+      line: '{{ item }}'
+      state: present
+    loop:
+    - 'net.ipv4.tcp_rmem            = 4096 16060 262144'
+    - 'net.ipv4.tcp_wmem            = 4096 16384 262144'
+    - 'net.ipv4.tcp_tw_reuse        = 1'
+    - 'net.ipv4.ip_local_port_range = 1024 65023'
+    - 'net.ipv4.tcp_max_syn_backlog = 60000'
+    - 'net.ipv4.tcp_fin_timeout     = 30'
+    - 'net.ipv4.tcp_synack_retries  = 3'
+    - 'net.ipv4.ip_nonlocal_bind    = 1'
+    - 'net.core.somaxconn           = 60000'
+  - name: Garante que o kernel receba as configurações
+    service:
+      name: systemd-sysctl
+      state: restarted

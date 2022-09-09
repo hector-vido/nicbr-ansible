@@ -1,0 +1,46 @@
+---
+# tasks file for balancer 
+- name: Inclui variáveis específicas da distro
+  include_vars: '{{ ansible_os_family|lower }}.yml'
+- name: Executa as ações específicas da distro
+  include_tasks: '{{ ansible_os_family|lower }}.yml'
+- name: Garante que o HAProxy esteja presente
+  package:
+    name: haproxy, keepalived
+    state: present
+- name: Garante que o arquivo de configuração do HAProxy esteja presente
+  template:
+    src: haproxy.j2
+    dest: /etc/haproxy/haproxy.cfg
+  notify: Reload HAProxy
+- name: Garante que o serviço do HAProxy esteja iniciado
+  service:
+    name: haproxy
+    state: started
+    enabled: yes
+- name: Garante que o arquivo do keepalived esteja presente
+  template:
+    src: keepalived.j2
+    dest: /etc/keepalived/keepalived.conf
+  notify: Reload keepalived
+- name: Garante que o serviço do keepalived esteja iniciado
+  service:
+    name: keepalived
+    state: started
+    enabled: yes
+- name: Garante que o kernel esteja ajustado para o HAProxy
+  lineinfile:
+    path: /etc/sysctl.conf
+    line: '{{ item }}'
+    state: present
+  loop:
+  - 'net.ipv4.tcp_rmem            = 4096 16060 262144'
+  - 'net.ipv4.tcp_wmem            = 4096 16384 262144'
+  - 'net.ipv4.tcp_tw_reuse        = 1'
+  - 'net.ipv4.ip_local_port_range = 1024 65023'
+  - 'net.ipv4.tcp_max_syn_backlog = 60000'
+  - 'net.ipv4.tcp_fin_timeout     = 30'
+  - 'net.ipv4.tcp_synack_retries  = 3'
+  - 'net.ipv4.ip_nonlocal_bind    = 1'
+  - 'net.core.somaxconn           = 60000'
+  notify: Restart sysctl

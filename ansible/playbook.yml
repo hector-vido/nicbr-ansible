@@ -1,0 +1,4 @@
+- hosts: balancers_limpo
+  become: yes
+  roles:
+  - balancer

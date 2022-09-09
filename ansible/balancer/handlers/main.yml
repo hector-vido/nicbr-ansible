@@ -1,0 +1,14 @@
+---
+# handlers file for balancer
+- name: Reload HAProxy
+  service:
+    name: haproxy
+    state: reloaded
+- name: Reload keepalived
+  service:
+    name: keepalived
+    state: reloaded
+- name: Restart sysctl
+  service:
+    name: systemd-sysctl
+    state: restarted

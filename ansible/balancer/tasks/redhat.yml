@@ -1,0 +1,24 @@
+---
+# redhat tasks file for balancer
+- name: Permite o tráfego na porta 80 e 443
+  ansible.posix.firewalld:
+    service: '{{ item }}'
+    permanent: yes
+    state: enabled
+  loop:
+  - http
+  - https
+- name: Garante que o protocolo VRRP esteja liberado no firewalld
+  ansible.posix.firewalld:
+    rich_rule: rule protocol value="vrrp" accept
+    permanent: yes
+    state: enabled
+- name: Garante que o módulo libsemange esteja presente
+  package:
+    name: python3-libsemanage
+    state: present
+- name: Garante que o SELinux permita o HAProxy a usar as portas
+  ansible.posix.seboolean:
+    name: haproxy_connect_any
+    state: yes
+    persistent: yes

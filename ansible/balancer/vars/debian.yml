@@ -1,0 +1,3 @@
+---
+# debian vars file for balancer
+keepalived_interface: eth1

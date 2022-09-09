@@ -1,0 +1,6 @@
+---
+# debian tasks file for balancer
+- name: Atualiza os pacotes do Debian
+  apt:
+    update_cache: yes
+  when: ansible_os_family == 'Debian'
