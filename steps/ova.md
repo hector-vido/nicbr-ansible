@@ -14,37 +14,39 @@ Três passos serão necessários para conseguirmos acesso as máquinas:
 
 ## Configurando o ambiente
 
-Importe as máquinas cliando no menu "Arquivo -> Importar Applicance":
+1. Importe as máquinas cliando no menu "Arquivo -> Importar Applicance":
 
 ![Importar as máquinas](../images/virtualbox-01.png)
 
-Clique no ícone do diretório para abrir o explorador de arquivos:
+2. Clique no ícone do diretório para abrir o explorador de arquivos:
 
 ![Selecionar o diretório](../images/virtualbox-02.png)
 
-Selecione o arquivo `ansible.ova` e clique em "Abrir":
+3. Selecione o arquivo `ansible.ova` e clique em "Abrir":
 
 ![Selecionar o arquivo ansible.ova](../images/virtualbox-03.png)
 
-Clique em "Avançar":
+4. Clique em "Avançar":
 
 ![Avançar](../images/virtualbox-04.png)
 
-Clique em "Importar":
+5. Clique em "Importar":
 
 ![Importar](../images/virtualbox-05.png)
 
-Espere a importação, dependendo da máquina física isso pode levar alguns minutos:
+6. Espere a importação, dependendo da máquina física isso pode levar alguns minutos:
 
 ![Esperar a importação](../images/virtualbox-06.png)
 
-Esta são as máquinas importadas:
+7. Esta são as máquinas importadas:
 
 ![Máquinas importadas](../images/virtualbox-07.png)
 
-Clique em "Arquivo -> Gerenciador da Rede Hospedeira":
+8. Clique em "Arquivo -> Gerenciador da Rede Hospedeira":
 
-![Adicionar o adaptador de rede](../images/virtualbox-08.png)
+![Adicionar rede](../images/virtualbox-08.png)
+
+9. Adicionar rede
 
 Muitas vezes a interface de rede já existe por padrão dentro do VirtualBox, seu nome não importa, o que importa é o seu endereço IPv4. É possível adicionar uma nova interface ou modificar uma existente, isso fica a seu critério.
 
@@ -52,17 +54,21 @@ O endereço IPv4 deve ser `192.168.56.1` e a máscara de rede `255.255.255.0`, o
 
 ![Configurar adaptador](../images/virtualbox-09.png)
 
-Verifique se todas as máquinas possúem seu adaptador número 2 configurado como "host-only" na interface criada anteriormente.
+10. Verifique se todas as máquinas possúem seu adaptador número 2 configurado como "host-only" na interface criada anteriormente.
 
 ![Verificar adaptador nas máquinas](../images/virtualbox-10.png)
 
-Caso não esteja, clique no nome da rede e modifique na janela que aparecerá:
+11. Caso não esteja, clique no nome da rede e modifique na janela que aparecerá:
 
 ![Modificar adaptador caso precise](../images/virtualbox-11.png)
+
+12. Iniciar uma máquina
 
 Inicie uma das máquinas, mas cuidado pois ao clicar na janela seu mouse poderá ficar preso e para soltá-lo deve-se pressionar CTRL direito, alguns modelos de teclado não possuem o CTRL direito e outra tecla de atalho deverá ser configurada no VirtualBox.
 
 ![Iniciar uma máquina](../images/virtualbox-12.png)
+
+13. Acessar uma máquina
 
 Todas as máquinas podem ser acessadas com o usuário `root` e a senha `vagrant` ou o usuário `vagrant` com a senha `vagrant`.
 Acesse a máquina e execute o comando `ip a` para verificar as configurações das interfaces de rede.
@@ -73,8 +79,12 @@ Cada máquina possuí um IP específico, são eles:
 - 192.168.56.201 - Fedora
 - 192.168.56.202 - openSUSE
 
+Caso a máquina não esteja com o endereço IP correto, desligue-a, verifique as configurações da rede criada anteriormente e verifique se a máquina está com o adaptador 2 anexado a esta rede.
+
 ![Verificar endereço IP](../images/virtualbox-13.png)
 
-Verifique a conexão da máquina hospedeira com a máquina virtual:
+14. Verifique a conexão da máquina hospedeira com a máquina virtual:
 
 ![Verificar conexão](../images/virtualbox-14.png)
+
+Caso não consiga conexão com a máquina, desligue-a, verifique as configurações da rede criada anteriormente e verifique se a máquina está com o adaptador 2 anexado a esta rede. Se mesmo assim o problema persistir tente utilizar o Vagrant.
