@@ -1,8 +1,15 @@
+- name: Garante que o serviço firewalld esteja rodando
+  service:
+    name: firewalld
+    state: started
+    enabled: yes
+  when: ansible_os_family == 'RedHat'
 - name: Permite o tráfego na porta 80 e 443
   ansible.posix.firewalld:
     service: '{{ item }}'
     permanent: yes
     state: enabled
+    immediate: yes
   loop:
   - http
   - https
@@ -11,6 +18,7 @@
     rich_rule: rule protocol value="vrrp" accept
     permanent: yes
     state: enabled
+    immediate: yes
 - name: Garante que o módulo libsemange esteja presente
   package:
     name: python3-libsemanage

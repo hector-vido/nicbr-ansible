@@ -14,6 +14,8 @@ Três passos serão necessários para conseguirmos acesso as máquinas:
 
 ## Configurando o ambiente
 
+[![Video Provisionando a Infraestrutura](../images/youtube-video.png)](https://youtu.be/wBf5cTtke74 "Video Provisionando a Infraestrutura")
+
 1. Importe as máquinas cliando no menu "Arquivo -> Importar Applicance":
 
 ![Importar as máquinas](../images/virtualbox-01.png)
