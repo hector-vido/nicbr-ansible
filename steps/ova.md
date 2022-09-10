@@ -1,6 +1,6 @@
 # NIC.br Ansible - ansible.ova
 
-Baixe o arquivo [ansible.ova](https://drive.google.com/file/d/1uEnR26cJ0ybJswQS7Ll3R5553vNJVTMv/view?usp=sharing) em seu computador.
+Baixe o arquivo [ansible.ova](https://drive.google.com/file/d/1DfS5piCj1AX0k8O3Njoax5BNQ6dA2GX_/view?usp=sharing) em seu computador.
 
 Um arquivo `.ova` é um pacote com definições e discos de máquinas virtuais. Neste nosso caso haverão quatro máquinas dentro deste arquivo.
 
