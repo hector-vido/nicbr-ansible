@@ -6,7 +6,7 @@ Para fazer o laboratório é preciso possuir um software de virtualização, con
 
 Existem outros hypervisors como o [KVM](https://www.linux-kvm.org/page/Main_Page) para Linux ou outras soluções fechadas para Windows ou sistemas operacionais da Apple, porém o foco será sempre o VirtualBox.
 
-Para criar o laboratório é possível utilizar o `Vagrant` ou baixar o arquivo [ansible.ova](https://drive.google.com/drive/folders/17VoBJWpPRFIUTtho1XTtrEhMKQHaOg7F) e importá-lo no VirtualBox, a primeira forma é mais moderna e trás mais possibilidades de estudo para o usuário.
+Para criar o laboratório é possível utilizar o `Vagrant` ou baixar o arquivo [ansible.ova](https://drive.google.com/file/d/1uEnR26cJ0ybJswQS7Ll3R5553vNJVTMv/view?usp=sharing) e importá-lo no VirtualBox, a primeira forma é mais moderna e trás mais possibilidades de estudo para o usuário.
 
 Escolha uma das opções abaixo para obter melhores instruções sobre como preparar o ambiente:
 
