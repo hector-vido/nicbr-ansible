@@ -36,6 +36,7 @@ Vagrant.configure('2') do |config|
         cp /vagrant/provision/id_ed25519 /root/.ssh
         chmod 400 /root/.ssh/id_ed25519*
         cp /vagrant/provision/id_ed25519.pub /root/.ssh/authorized_keys
+        > /etc/udev/rules.d/70-persistent-net.rules
       SHELL
 
     end
