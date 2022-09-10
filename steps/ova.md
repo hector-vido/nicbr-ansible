@@ -14,7 +14,7 @@ Três passos serão necessários para conseguirmos acesso as máquinas:
 
 ## Configurando o ambiente
 
-[![Video Provisionando a Infraestrutura](../images/youtube-video.png)](https://youtu.be/wBf5cTtke74 "Video Provisionando a Infraestrutura")
+[![Video Provisionando a Infraestrutura](../images/youtube-video.png)](https://youtu.be/8pJImKMffT8 "Video Provisionando a Infraestrutura")
 
 1. Importe as máquinas cliando no menu "Arquivo -> Importar Applicance":
 
