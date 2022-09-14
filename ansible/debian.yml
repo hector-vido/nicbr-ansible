@@ -1,0 +1,3 @@
+- name: Garantindo que a lista de pacotes esteja atualizada
+  apt:
+    update_cache: yes

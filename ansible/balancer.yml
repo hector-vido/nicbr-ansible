@@ -59,7 +59,7 @@
     when: haproxy.changed == true
   - name: Garante que o arquivo do keepalived esteja presente
     template:
-      src: files/keepalived.conf
+      src: files/keepalived.j2
       dest: /etc/keepalived/keepalived.conf
     register: keepalived
   - name: Garante que o serviço do keepalived esteja iniciado

@@ -3,11 +3,11 @@
   tasks:
   # ------------ Debian --------------
   - name: Executa as ações em Debian
-    include_tasks: balancer-debian.yml
+    include_tasks: debian.yml
     when: ansible_os_family == 'Debian'
   # ------------ Red Hat -------------
   - name: Executa as ações em Red Hat
-    include_tasks: balancer-redhat.yml
+    include_tasks: redhat.yml
     when: ansible_os_family == 'RedHat'
   # ------------- Geral --------------
   - name: Garante que o HAProxy esteja presente
@@ -31,7 +31,7 @@
     when: haproxy.changed == true
   - name: Garante que o arquivo do keepalived esteja presente
     template:
-      src: files/keepalived.conf
+      src: files/keepalived.j2
       dest: /etc/keepalived/keepalived.conf
     register: keepalived
   - name: Garante que o serviço do keepalived esteja iniciado

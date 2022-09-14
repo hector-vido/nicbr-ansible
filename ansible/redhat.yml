@@ -1,29 +1,28 @@
-- name: Garante que o serviço firewalld esteja rodando
+- name: Garantindo que o firewall esteja inicializado
   service:
     name: firewalld
     state: started
     enabled: yes
-  when: ansible_os_family == 'RedHat'
-- name: Permite o tráfego na porta 80 e 443
+- name: Garantindo que as portas 80 e 443 estejam abertas
   ansible.posix.firewalld:
     service: '{{ item }}'
-    permanent: yes
     state: enabled
     immediate: yes
+    permanent: yes
   loop:
   - http
   - https
-- name: Garante que o protocolo VRRP esteja liberado no firewalld
+- name: Garantindo que o protocolo VRRP esteja liberado
   ansible.posix.firewalld:
     rich_rule: rule protocol value="vrrp" accept
-    permanent: yes
     state: enabled
     immediate: yes
-- name: Garante que o módulo libsemange esteja presente
-  package:
+    permanent: yes
+- name: Garantindo que python3-libsemanage esteja instalado
+  yum:
     name: python3-libsemanage
     state: present
-- name: Garante que o SELinux permita o HAProxy a usar as portas
+- name: Garantindo regra selinux para HAProxy
   ansible.posix.seboolean:
     name: haproxy_connect_any
     state: yes

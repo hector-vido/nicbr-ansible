@@ -1,35 +1,34 @@
-- hosts: balancers
+- name: Provisionando os balancers
+  hosts: balancers
   become: yes
   tasks:
-  # ------------ Debian --------------
-  - name: Executa as ações em Debian
-    include_tasks: balancer-debian.yml
-    when: ansible_os_family == 'Debian'
-  # ------------ Red Hat -------------
-  - name: Executa as ações em Red Hat
-    include_tasks: balancer-redhat.yml
-    when: ansible_os_family == 'RedHat'
-  # ------------- Geral --------------
-  - name: Garante que o HAProxy esteja presente
+  - name: Inclui o arquivo de tarefas especificas da distribuicao
+    include_tasks: '{{ ansible_os_family|lower }}.yml'
+  - name: Garantindo que os pacotes haproxy e keepalived estejam instalados
     package:
       name: haproxy, keepalived
       state: present
-  - name: Garante que o arquivo de configuração do HAProxy esteja presente
+  - name: Garantindo o arquivo de configuração do HAProxy
     template:
-      src: files/haproxy.j2
+      src: files/haproxy.cfg
       dest: /etc/haproxy/haproxy.cfg
-    notify: Reload HAProxy
-  - name: Garante que o serviço do HAProxy esteja iniciado
+    register: haproxy_config
+  - name: Garantindo o arquivo de configuração do keepalived
+    template:
+      src: files/keepalived.conf
+      dest: /etc/keepalived/keepalived.conf
+    notify: Restart keepalived
+  - name: Garantindo que o serviço do HAProxy esteja rodando
     service:
       name: haproxy
       state: started
       enabled: yes
-  - name: Garante que o arquivo do keepalived esteja presente
-    template:
-      src: files/keepalived.conf
-      dest: /etc/keepalived/keepalived.conf
-    notify: Reload keepalived
-  - name: Garante que o serviço do keepalived esteja iniciado
+  - name: Garantindo que o serviço do HAProxy receba as configurações
+    service:
+      name: haproxy
+      state: reloaded
+    when: haproxy_config.changed == true
+  - name: Garantindo que o serviço do keepalived esteja rodando
     service:
       name: keepalived
       state: started
@@ -49,18 +48,13 @@
     - 'net.ipv4.tcp_synack_retries  = 3'
     - 'net.ipv4.ip_nonlocal_bind    = 1'
     - 'net.core.somaxconn           = 60000'
-    notify: Restart sysctl
-
-  handlers:
-  - name: Reload HAProxy
-    service:
-      name: haproxy
-      state: reloaded
-  - name: Reload keepalived
-    service:
-      name: keepalived
-      state: reloaded
-  - name: Restart sysctl
+  - name: Garante que o kernel receba as configurações
     service:
       name: systemd-sysctl
       state: restarted
+
+  handlers:
+  - name: Restart keepalived
+    service:
+      name: keepalived
+      state: reloaded
