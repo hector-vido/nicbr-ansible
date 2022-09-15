@@ -70,7 +70,7 @@ Idempotência, em ciência da computação, é a propriedade que algumas operaç
 
 No Linux, se tentarmos cadastrar o mesmo usuário duas vezes, teremos um erro na segunda execução, pois o usuário já existe.
 
-## E o Ansible da Red Hat?
+# E o Ansible da Red Hat?
 
 O Ansible que a Red Hat fornece aos seus clientes é baseado na versão community do Ansible, é praticamente o mesmo, porém seus módulos e demais complementos que podemos adicionar passam por um teste ainda mais rigoroso e passam a ser suportados pela própria Red Hat.
 
