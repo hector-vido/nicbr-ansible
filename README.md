@@ -26,50 +26,53 @@ Escolha uma das opções abaixo para obter melhores instruções sobre como prep
 
 ![Ansible](images/ansible.png)
 
-Ansible é um projeto livre e de código aberto voltado para o provisionamento, gerência de configuração e implantação de software através de [Infraestrutura como Código](https://pt.wikipedia.org/wiki/Infraestrutura_como_C%C3%B3digo). Foi desenvolvido originalmente por Michael DeHaan e adquirido pela Red Hat em 2015.
+De forma simplista, Ansible é uma ferramenta de automação, mas é importante entender de qual tipo automação estamos falando e que "Ansible" não é apenas uma única ferramenta.
 
-De forma sucinta, as operações do Ansible acontecem através de uma máquina central, normalmente a mesma que está usando para ler este texto, se comunicando com outros dispositivos, APIs ou qualquer outro protocolo disponível.
+Ansible é um projeto livre e de código aberto voltado para o provisionamento, gerência de configuração e implantação de software que nos possibilita utilizar [Infraestrutura como Código](https://pt.wikipedia.org/wiki/Infraestrutura_como_C%C3%B3digo). Foi desenvolvido originalmente por Michael DeHaan e adquirido pela Red Hat em 2015.
 
-Na grande maioria das vezes utilizamos o Ansible para se comunicar com outras máquinas, e apesar desta ser a sua principal função não é a sua única capacidada.
+Na maioria das vezes as operações do Ansible acontecem através de uma máquina central, normalmente a mesma que está usando para ler este texto, se comunicando com outros dispositivos, APIs ou qualquer outro protocolo disponível. Essa máquina é conhecida como **control node**.
 
-Diferente de outras ferramentas que trabalham com um servidor central e agentes, como [CFEngine](https://en.wikipedia.org/wiki/CFEngine) ou [Puppet](https://en.wikipedia.org/wiki/Puppet_(software)), o Ansible trabalha sozinho, e chamamos isso _"agentless"_ (sem agentes), afinal de contas, não devemos gerenciar o gerenciador não é mesmo?
+Na grande maioria das vezes utilizamos o Ansible para configurar outras máquinas, os **managed nodes**, e fazemos isso através de [**módulos**](https://docs.ansible.com/ansible/2.9/modules/list_of_all_modules.html). Para cada tarefa que deseja fazer (instalar um pacote, criar um usuário, copiar um arquivo), haverá um módulo especifico. Durante a execução, o Ansible se conectará ao nó gerenciado, copiando o módulo (normalmente código python) e o executando.
 
 Para fazer a conexões em outras máquinas o Ansible utiliza o bom e velho [**SSH**](https://pt.wikipedia.org/wiki/Secure_Shell) em máquinas Linux ou o [**winrm**](https://en.wikipedia.org/wiki/Windows_Remote_Management) em máquinas Windows, formas de conexão já conhecidas pelos profissionais de cada um destes sistemas.
 
-## O Preço da Simplicidade
+Apesar de configurar máquinas ser a principal função do Ansible, esta não é a sua única capacidade. Podemos utilizar o Ansible para consumir APIs, configurar equipamentos de rede (switches, pontos de acesso, etc), fazer testes (verificar se uma porta está aberta, procurar uma palavra em um site) e praticamente tudo o que sua criatividade e persistência lhe permitir. 
 
-Apesar da arquitetura do Ansible ser bastante simples e convidativa, sua simplicidade trás uma desvantagem: gerenciar milhares de máquinas.
+Para **codificarmos nossa infraestrutura** em Ansible utilizamos um arquivo de texto bastante fácil de se ler e escrever chamado **playbook**. Uma playbook descreve as tarefas que queremos executar e são escritas no formato de serialização [YAML](https://pt.wikipedia.org/wiki/YAML). 
 
-Enquanto outras soluções gerenciam as requisições dos agentes para evitar uma inundação de conexões ao mesmo tempo que podem deixar os agentes trabalhando por conta logo após entregar as instruções o Ansible precisa continuar conectado em cada máquina esperando o status de cada instrução.
+Para informar ao Ansible quais nós queremos gerenciar utilizamos um **inventário**. Basicamente um inventário é um arquivo de texto simples com informações pertinentes de cada nó. É muito comum utilizarmos o formato `.ini` já conhecido no Linux, mas podemos escrevê-los em outros formatos como `.json` ou `.yaml`.
 
-Essa forma de trabalho torna-se um fardo para a máquina que executa o Ansible pois utiliza mais recursos do que outras soluções com agentes e dependendo da situação pode acabar levando muito mais tempo pois algumas das máquinas gerenciadas podem segurar a execução de algumas tarefas.
+Existem duas características interessantes do Ansible, a sua forma declarativa e a sua idempotência.
 
-Isso não é o fim do mundo, primeiro porque ficará evidente somente com uma quantidade enorme de máquinas e segundo porque é possível contornar essa desvantagem utilizando outras [estratégias](https://docs.ansible.com/ansible/latest/user_guide/playbooks_strategies.html), paralelismo, dividir o trabalho entre diferentes máquinas controladores, etc.
+## Forma Declarativa
 
-## Conceitos Básicos
+Uma das características do Ansible é trabalhar de forma declarativa, nós não especificamos como as coisas devem ser feitas e sim como as coisas devem ficar.
 
-Existem um pouco mais de [conceitos básicos](https://docs.ansible.com/ansible/latest/network/getting_started/basic_concepts.html) oficias do Ansible, mas estes a seguir são suficientes para este laboratório.
+Por exemplo, para instalar o `vim` nós não digitamos o comando de instalação de forma imperativa:
 
-### Nó de Controle
+```bash
+dnf install -y vim
+```
 
-O nó de controle (*control node*) é a máquina que executa as ferramentas do ansible (`ansible`, `ansible-playbook`). Qualquer computador, ou coisa, que consiga instalar o Ansible e suas dependências pode ser utilizado - notebooks, máquinas virtuais, grandes servidores, containers.
+Muito pelo contrário, nós especificamos o pacote e seu estado e o Ansible ficará responsável por resolver:
 
-### Nós Gerenciados
+```yml
+package:
+  name: vim
+  state: present
+```
 
-Os nós gerenciados (*managed nodes*), ou hosts, são os dispositivos alvo que pretendemos gerenciar com o Ansible, podem ser computadores, máquinas virtuais, dispositivos de rede, etc.
+Dessa forma eu não preciso me preocupar tanto com parâmetros e características peculiares de uma determinada distribuição. Nem sempre é possível trabalhar assim, mas é interessante ter esse conceito em mente.
 
-### Inventário
+## Idempotência
 
-O inventário é uma lista de nós gerenciados, basicamente um arquivo de texto simples com informações pertinentes de cada nó. É muito comum utilizarmos o formato `.ini` já conhecido no Linux, mas podemos escrevê-los em outros formatos como `.json` ou `.yaml`.
+Idempotência, em ciência da computação, é a propriedade que algumas operações tem de poderem ser executadas diversas vezes sem que o resultado final se altere após a primeira execução. Neste nosso caso, significa que podemos executar um "código do Ansible" para, por exemplo, criar um usuário sem se preocupar se suas execuções subsequentes apresentarão problemas com o usuário agora existente.
 
-### Playbooks
+No Linux, se tentarmos cadastrar o mesmo usuário duas vezes, teremos um erro na segunda execução, pois o usuário já existe.
 
-Playbooks são arquivos de texto fáceis de ler e escrever e descrevem as tarefas que queremos executar. As playbooks são escritas no formato de serialização [YAML](https://pt.wikipedia.org/wiki/YAML).
+## E o Ansible da Red Hat?
 
-### Roles
+O Ansible que a Red Hat fornece aos seus clientes é baseado na versão community do Ansible, é praticamente o mesmo, porém seus módulos e demais complementos que podemos adicionar passam por um teste ainda mais rigoroso e passam a ser suportados pela própria Red Hat.
 
-As roles são como as playbooks mas são estruturadas de uma forma a facilitar sua reutilização, não se preocupe com as roles agora.
+Se você quer conhecer as ferramentas da Red Hat, é um desenvolvedor, ou apenas um curioso, e não pretende necessariamente adquirir a subscrição é possível ingressar gratuitamente no [Red Hat Developer Program](https://developers.redhat.com/about) e ter acesso a todas essas ferramentas, inclusive para usar em produção.
 
-### Módulos
-
-Os [módulos](https://docs.ansible.com/ansible/2.9/modules/list_of_all_modules.html) são código ou binários que o Ansible transfere e executa em cada nó gerenciado. Todas as tarefas especificadas em uma playbook são baseadas em algum módulo.
